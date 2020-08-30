@@ -40,14 +40,15 @@
 
 set -e
 WORK_DIR=~/build-ovs
-OVS_VERSION="v2.8.1"
-OVS_VERSION_SHORT="2.8.1"
+OVS_VERSION="v2.8.9"
+OVS_VERSION_SHORT="2.8.9"
 MAGMA_ROOT="../../../"
-GTP_PATCH_PATH="${MAGMA_ROOT}/third_party/gtp_ovs"
+GTP_PATCH_PATH="${MAGMA_ROOT}third_party/gtp_ovs/kenrel-4.9"
 # Build time dependencies
 BUILD_DEPS="graphviz debhelper dh-autoreconf python-all python-twisted-conch module-assistant git ruby-dev openssl pkg-config libssl-dev build-essential"
-PATCHES="$(ls ${GTP_PATCH_PATH}/ovs/${OVS_VERSION_SHORT})"
-FLOWBASED_PATH="$(readlink -f ${GTP_PATCH_PATH}/gtp-v4.9-backport)"
+PATCHES="$(ls ${GTP_PATCH_PATH}/${OVS_VERSION_SHORT})"
+FLOWBASED_PATH=$(readlink -f ${MAGMA_ROOT}/third_party/gtp_ovs/kenrel-4.9/gtp-v4.9-backport/)
+PATCH_ROOT=$(readlink -f "$GTP_PATCH_PATH/$OVS_VERSION_SHORT/")
 
 # The resulting package is placed in $OUTPUT_DIR
 # or in the cwd.
@@ -81,9 +82,11 @@ cd ${WORK_DIR}
 git clone https://github.com/openvswitch/ovs.git
 cd ovs
 git checkout ${OVS_VERSION}
-cp ${GTP_PATCH_PATH}/ovs/${OVS_VERSION_SHORT}/*.patch "${WORK_DIR}/ovs"
+cp $PATCH_ROOT/*.patch $WORK_DIR/ovs
 cp -r "${FLOWBASED_PATH}" "${WORK_DIR}/ovs/flow-based-gtp-linux-v4.9"
-git apply ${PATCHES}
+git am ${PATCHES}
+# vlan fix
+git cherry-pick 3cf2b424bb
 
 ./boot.sh
 # Building OVS user packages
@@ -99,3 +102,6 @@ ksrc="/lib/modules/$kvers/build"
 sudo make -f debian/rules.modules KSRC="$ksrc" KVERS="$kvers" binary-modules
 
 cp /usr/src/*.deb ${WORK_DIR}
+
+# OVS packages:
+# sudo dpkg -i openvswitch-datapath-module-4.9.0-9-amd64_2.8.9-1_amd64.deb openvswitch-switch_2.8.9-1_amd64.deb openvswitch-test_2.8.9-1_all.deb python-openvswitch_2.8.9-1_all.deb  libopenvswitch_2.8.9-1_amd64.deb openvswitch-common_2.8.9-1_amd64.deb
