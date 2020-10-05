@@ -1424,10 +1424,10 @@
     morgan "^1.9.1"
     winston "^3.0.0"
 
-"@fbcnms/platform-server@^0.1.16":
-  version "0.1.16"
-  resolved "https://registry.yarnpkg.com/@fbcnms/platform-server/-/platform-server-0.1.16.tgz#c3e63b365a197a6046041796c89019754a7a18b4"
-  integrity sha512-IgzDgpXeGZfthS6Xy8VEp398HdNifyj4f9GxFsNpPpozUCFr5c6n4hc9iLfFGUnrB18tegaDBb6mv6KAm7GDeQ==
+"@fbcnms/platform-server@^0.1.18":
+  version "0.1.18"
+  resolved "https://registry.yarnpkg.com/@fbcnms/platform-server/-/platform-server-0.1.18.tgz#20a5253bcc2e46f98a8d298bb740b294c6d3da2f"
+  integrity sha512-NWBbk5kJgnq80cJK0gmVP5HrzWK/EmOH26AHfjctLj+Kh8eVof33mYma3VKORUsJP+2J3WS8SKVO/6bkG53fUQ==
   dependencies:
     "@fbcnms/auth" "^0.1.0"
     "@fbcnms/babel-register" "^0.1.0"
