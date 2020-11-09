@@ -1,0 +1,50 @@
+---
+# Copyright 2020 The Magma Authors.
+
+# This source code is licensed under the BSD-style license found in the
+# LICENSE file in the root directory of this source tree.
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+- name: Include vars of all.yaml
+  include_vars:
+    file: all.yaml
+    name: all_vars
+
+- name: Configuring private package manager.
+  shell: echo "{{ all_vars.private_package }}" | tee /etc/apt/sources.list.d/{{ all_vars.source_name }}.list
+  become: yes
+
+- name: Add Apt signing key.
+  shell: apt-key adv --fetch-keys "{{ all_vars.apt_key }}"
+  become: yes
+
+- name: Update and upgrade apt packages
+  become: yes
+  apt:
+    update_cache: yes
+    upgrade: "yes"
+
+- name: Install build dependencies.
+  become: yes
+  apt:
+    name: "{{ packages }}"
+  vars:
+    packages:
+      - python-all
+      - openssl
+      - git
+
+- name: Ensure correct kernel headers are installed.
+  shell: "apt -y install linux-headers-$(uname -r)"
+  become: yes
+
+- name: Execute the boot.sh script.
+  command: sh boot.sh
+  args:
+    chdir: "{{ GIT_HOME.path }}/ovs"

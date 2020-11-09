@@ -1,0 +1,12 @@
+---
+- name: Set up the jumpapi server
+  hosts: jumpapi
+  become: yes
+
+  vars:
+    - user: ubuntu
+
+  roles:
+    - role: base
+    - role: avinetworks.docker
+    - role: vpn 
