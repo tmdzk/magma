@@ -471,6 +471,7 @@ jobs:
           command: |
             cd ${MAGMA_ROOT}/orc8r/cloud/docker
             python3 build.py -g
+          no_output_timeout: 20m
       - run: sudo chown -R circleci $MAGMA_ROOT/*
       - run: git add .
       - run: git status
