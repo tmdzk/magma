@@ -1,4 +1,4 @@
-# Magma
+  # Magma
 
 [![magma](https://circleci.com/gh/magma/magma.svg?style=shield)](https://circleci.com/gh/magma/magma)
 
